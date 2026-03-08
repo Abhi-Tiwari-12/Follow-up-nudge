@@ -941,7 +941,7 @@ main { padding-bottom: 60px !important; }
 // ───────────────────────────────────────────────────────────────
 //  CONFIG
 // ───────────────────────────────────────────────────────────────
-const GS_URL = "https://script.google.com/macros/s/AKfycbzf89Cqc_B5nTlcK8LFQNAA7n69rFSYIIFWYrxiZsbPqhZm0envR6fH-EzPhJXaOMVplA/exec";
+const GS_URL = "https://script.google.com/macros/s/AKfycbwOAOQisx1OSTd5Sd83omIUwDSIWDDgUYzButlkjznf1wZRlkQswxRrNR_CkRMgykhpwg/exec";
 
 // Gupshup API — only userid & password, everything else stays exactly as your curl
 const GUPSHUP_USERID   = "2000233295";
@@ -1130,7 +1130,7 @@ async function submit() {
 }
 
 function addScheduleEntry(s, followFor, when, rec, status) {
-  const entry = { id: Date.now(), name: s.name, phone: s.phone, followFor, when, rec, status, at: new Date().toISOString() };
+  const entry = { id: 'SCH-' + Date.now(), name: s.name, phone: s.phone, followFor, when, rec, status, at: new Date().toISOString() };
   schedules.unshift(entry);
   save();
   renderTable(schedules);
