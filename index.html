@@ -941,7 +941,7 @@ main { padding-bottom: 60px !important; }
 // ───────────────────────────────────────────────────────────────
 //  CONFIG
 // ───────────────────────────────────────────────────────────────
-const GS_URL = "https://script.google.com/macros/s/AKfycbwEQG7Q-CiJKFNxvT5F5CYVeS8ZOfAIoCUXb72W88oj9Ugok4lkuhthBiqYvTmpMhRIEw/exec";
+const GS_URL = "https://script.google.com/macros/s/AKfycbzf89Cqc_B5nTlcK8LFQNAA7n69rFSYIIFWYrxiZsbPqhZm0envR6fH-EzPhJXaOMVplA/exec";
 
 // Gupshup API — only userid & password, everything else stays exactly as your curl
 const GUPSHUP_USERID   = "2000233295";
@@ -955,20 +955,40 @@ let stakeholders = [];
 let selected     = null;
 let sendType     = 'instant';
 let recurrence   = 'once';
-let schedules    = JSON.parse(localStorage.getItem('tsc_schedules') || '[]');
+let schedules    = []; // loaded from Google Sheet on init
 
 // ───────────────────────────────────────────────────────────────
 //  INIT
 // ───────────────────────────────────────────────────────────────
-window.onload = () => {
+window.onload = async () => {
   const today = new Date().toISOString().split('T')[0];
   document.getElementById('sDate').min   = today;
   document.getElementById('sDate').value = today;
   loadStakeholders();
-  renderTable(schedules);
-  updateStats();
+  await loadSchedulesFromSheet();
   reAttach();
 };
+
+// ───────────────────────────────────────────────────────────────
+//  LOAD SCHEDULES FROM GOOGLE SHEET (source of truth)
+// ───────────────────────────────────────────────────────────────
+async function loadSchedulesFromSheet() {
+  try {
+    const res  = await fetch(GS_URL + '?action=getSchedules', { redirect: 'follow' });
+    const text = await res.text();
+    const json = JSON.parse(text);
+    if (json.success && json.data) {
+      schedules = json.data.reverse(); // newest first
+      save();
+    }
+  } catch (e) {
+    console.error('loadSchedulesFromSheet error:', e);
+    // fallback to localStorage if sheet unavailable
+    schedules = JSON.parse(localStorage.getItem('tsc_schedules') || '[]');
+  }
+  renderTable(schedules);
+  updateStats();
+}
 
 // ───────────────────────────────────────────────────────────────
 //  FETCH STAKEHOLDERS
@@ -1293,6 +1313,9 @@ async function sendNow(id) {
 function del(id) {
   schedules = schedules.filter(s => s.id !== id);
   save(); renderTable(schedules); updateStats();
+  // Also delete from Google Sheet so it doesn't reload on next open
+  fetch(GS_URL + '?action=deleteSchedule&id=' + id, { redirect: 'follow' })
+    .catch(err => console.error('deleteSchedule error:', err));
 }
 
 function save() { localStorage.setItem('tsc_schedules', JSON.stringify(schedules)); }
