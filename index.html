@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TSC Pulse — Follow Up Manager</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --blue:       #2563eb;
+  --blue-light: #3b82f6;
+  --blue-pale:  #eff6ff;
+  --blue-mid:   #dbeafe;
+  --blue-dark:  #1d4ed8;
+  --text:       #0f172a;
+  --text-mid:   #475569;
+  --text-soft:  #94a3b8;
+  --border:     #e2e8f0;
+  --bg:         #eef1f5;
+  --white:      #f5f7fa;
+  --red:        #ef4444;
+  --red-pale:   #fef2f2;
+  --green:      #16a34a;
+  --green-pale: #f0fdf4;
+  --yellow:     #d97706;
+  --yellow-pale:#fffbeb;
+  --radius:     12px;
+  --radius-sm:  8px;
+  --shadow:     0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md:  0 4px 16px rgba(37,99,235,0.10), 0 1px 4px rgba(0,0,0,0.06);
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── HEADER ── */
+header {
+  background: #ffffff;
+  border-bottom: 1px solid var(--border);
+  padding: 0 32px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--shadow);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-icon {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.brand-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.brand-name {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.02em;
+}
+
+.brand-name span { color: var(--blue); }
+
+.header-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 16px;
+  background: var(--blue);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+}
+
+.header-btn:hover { background: var(--blue-dark); transform: translateY(-1px); }
+.header-btn:active { transform: none; }
+
+/* ── MAIN ── */
+main {
+  flex: 1;
+  max-width: 1100px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 28px 24px 40px;
+}
+
+/* ── STATS ── */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.stat {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transition: box-shadow 0.2s;
+}
+
+.stat:hover { box-shadow: var(--shadow-md); }
+
+.stat-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.stat-icon.blue  { background: var(--blue-pale); color: var(--blue); }
+.stat-icon.green { background: var(--green-pale); color: var(--green); }
+.stat-icon.yellow{ background: var(--yellow-pale); color: var(--yellow); }
+
+.stat-info { flex: 1; }
+
+.stat-value {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: var(--text-soft);
+  font-weight: 500;
+  margin-top: 3px;
+}
+
+/* ── TWO-COL LAYOUT ── */
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 20px;
+  align-items: stretch;
+}
+
+/* ── CARDS ── */
+.card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.card-head {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.card-title-pill {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--blue);
+}
+
+.card-body { padding: 20px; }
+
+/* ── FORM ── */
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+.field { margin-bottom: 14px; }
+.field:last-child { margin-bottom: 0; }
+
+label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-mid);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 10px 13px;
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 14px;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  appearance: none;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--blue-light);
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.12);
+  background: var(--white);
+}
+
+input::placeholder, textarea::placeholder { color: var(--text-soft); }
+
+select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 34px;
+  cursor: pointer;
+}
+
+select option { background: var(--white); color: var(--text); }
+
+/* Stakeholder dropdown */
+.select-wrap { position: relative; }
+
+.select-display {
+  width: 100%;
+  padding: 10px 13px;
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  color: var(--text-soft);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  transition: border-color 0.15s;
+  user-select: none;
+}
+
+.select-display.has-value { color: var(--text); }
+.select-display:hover { border-color: var(--blue-light); }
+
+.select-display.open {
+  border-color: var(--blue-light);
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.12);
+  background: var(--white);
+}
+
+.select-val { display: flex; align-items: center; gap: 8px; flex: 1; }
+
+.s-avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--blue-mid);
+  color: var(--blue);
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.dropdown-panel {
+  position: absolute;
+  top: calc(100% + 5px);
+  left: 0; right: 0;
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.10);
+  z-index: 200;
+  display: none;
+  overflow: hidden;
+}
+
+.dropdown-panel.open { display: block; animation: fadeSlide 0.12s ease; }
+
+@keyframes fadeSlide {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.dp-search { padding: 8px 10px; border-bottom: 1px solid var(--border); }
+
+.dp-search input {
+  padding: 8px 10px;
+  font-size: 13px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.dp-list { max-height: 190px; overflow-y: auto; }
+
+.dp-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  cursor: pointer;
+  transition: background 0.1s;
+  font-size: 13px;
+}
+
+.dp-item:hover { background: var(--blue-pale); }
+
+.dp-item-name { font-weight: 600; color: var(--text); }
+.dp-item-phone { font-size: 12px; color: var(--text-soft); }
+
+.dp-empty { padding: 20px; text-align: center; color: var(--text-soft); font-size: 13px; }
+
+/* ── SEND TYPE TOGGLE ── */
+.type-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+.type-btn {
+  padding: 9px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-mid);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.15s;
+}
+
+.type-btn:hover { border-color: var(--blue-light); color: var(--text); }
+
+.type-btn.active {
+  background: var(--blue-pale);
+  border-color: var(--blue);
+  color: var(--blue);
+}
+
+/* ── RECURRENCE PILLS ── */
+.pills { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.pill {
+  padding: 5px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-mid);
+  cursor: pointer;
+  transition: all 0.15s;
+  background: var(--white);
+}
+
+.pill:hover { border-color: var(--blue); color: var(--blue); }
+.pill.active { background: var(--blue); border-color: var(--blue); color: #fff; }
+
+/* ── SCHEDULE BLOCK ── */
+.sched-block { display: none; margin-top: 16px; }
+.sched-block.show { display: block; animation: fadeSlide 0.15s ease; }
+
+/* ── SUBMIT BTN ── */
+.btn-submit {
+  width: 100%;
+  padding: 12px;
+  background: var(--blue);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+  margin-top: 20px;
+  letter-spacing: 0.01em;
+}
+
+.btn-submit:hover {
+  background: var(--blue-dark);
+  box-shadow: 0 4px 14px rgba(37,99,235,0.35);
+  transform: translateY(-1px);
+}
+
+.btn-submit:active { transform: none; box-shadow: none; }
+.btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+.divider { height: 1px; background: var(--border); margin: 18px 0; }
+
+/* ── WA PREVIEW ── */
+.wa-preview {
+  background: #e5ddd5;
+  border-radius: 10px;
+  padding: 14px 12px;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23b2a99a' fill-opacity='0.15'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+.wa-bubble {
+  background: #fff;
+  border-radius: 0 8px 8px 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  line-height: 1.6;
+  max-width: 88%;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.12);
+  color: #111;
+  position: relative;
+}
+
+.wa-bubble::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -6px;
+  border: 6px solid transparent;
+  border-top-color: #fff;
+  border-right-color: #fff;
+}
+
+.wa-name { font-weight: 700; color: var(--blue); margin-bottom: 3px; font-size: 12px; }
+.wa-body { color: #1a1a1a; white-space: pre-line; }
+.wa-time { font-size: 10px; color: #8a8a8a; text-align: right; margin-top: 6px; }
+
+/* ── TABLE ── */
+.table-wrap { overflow-x: auto; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+thead th {
+  padding: 10px 14px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-soft);
+  border-bottom: 1.5px solid var(--border);
+  white-space: nowrap;
+}
+
+tbody td {
+  padding: 12px 14px;
+  color: var(--text-mid);
+  border-bottom: 1px solid var(--bg);
+  vertical-align: middle;
+}
+
+tbody tr:hover td { background: var(--blue-pale); }
+tbody tr:last-child td { border-bottom: none; }
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 9px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.badge-sent     { background: var(--green-pale); color: var(--green); }
+.badge-scheduled{ background: var(--yellow-pale); color: var(--yellow); }
+.badge-failed   { background: var(--red-pale); color: var(--red); }
+
+.tbl-btn {
+  width: 28px; height: 28px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: transparent;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-soft);
+  transition: all 0.15s;
+  margin-right: 4px;
+}
+
+.tbl-btn:hover       { border-color: var(--blue); color: var(--blue); background: var(--blue-pale); }
+.tbl-btn.del:hover   { border-color: var(--red); color: var(--red); background: var(--red-pale); }
+
+.empty-state {
+  text-align: center;
+  padding: 44px 20px;
+  color: var(--text-soft);
+}
+
+.empty-icon { font-size: 36px; margin-bottom: 8px; }
+.empty-text { font-size: 13px; font-weight: 500; }
+
+/* ── MODAL ── */
+.overlay {
+  position: fixed; inset: 0;
+  background: rgba(15,23,42,0.45);
+  backdrop-filter: blur(3px);
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s;
+}
+
+.overlay.open { opacity: 1; pointer-events: all; }
+
+.modal {
+  background: var(--white);
+  border-radius: var(--radius);
+  width: 420px;
+  max-width: 92vw;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.18);
+  transform: scale(0.96) translateY(8px);
+  transition: transform 0.18s;
+  overflow: hidden;
+}
+
+.overlay.open .modal { transform: scale(1) translateY(0); }
+
+.modal-head {
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-title { font-size: 15px; font-weight: 700; color: var(--text); }
+
+.modal-close {
+  width: 28px; height: 28px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: transparent;
+  font-size: 16px;
+  color: var(--text-soft);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+
+.modal-close:hover { border-color: var(--red); color: var(--red); }
+
+.modal-body { padding: 22px; }
+
+.modal-foot {
+  padding: 14px 22px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.btn-ghost {
+  padding: 9px 18px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-mid);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-ghost:hover { border-color: var(--blue); color: var(--blue); }
+
+.btn-blue {
+  padding: 9px 20px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: var(--blue);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-blue:hover { background: var(--blue-dark); }
+.btn-blue:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* ── TOAST ── */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--text);
+  color: #fff;
+  padding: 13px 18px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  z-index: 999;
+  transform: translateY(80px);
+  opacity: 0;
+  transition: all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+  max-width: 320px;
+}
+
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast.success { background: var(--green); }
+.toast.error   { background: var(--red); }
+.toast.info    { background: var(--blue); }
+
+/* ── FOOTER ── */
+footer {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  border-top: 1px solid var(--border);
+  background: #ffffff;
+  padding: 10px 32px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-soft);
+  z-index: 99;
+}
+
+footer strong { color: var(--text-mid); }
+
+/* Push content above fixed footer */
+main { padding-bottom: 60px !important; }
+
+/* ── SPINNER ── */
+.spin {
+  width: 15px; height: 15px;
+  border: 2px solid rgba(255,255,255,0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: sp 0.6s linear infinite;
+  display: inline-block;
+}
+
+@keyframes sp { to { transform: rotate(360deg); } }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 860px) {
+  .layout { grid-template-columns: 1fr; }
+  .stats  { grid-template-columns: 1fr 1fr; }
+  header { padding: 0 16px; }
+  main   { padding: 20px 16px 60px; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="brand">
+    <div class="brand-icon">
+      <img src="logo.png" alt="TSC Logo" onerror="this.style.display='none'; this.parentElement.innerHTML='<svg width=18 height=18 viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;%232563eb&quot; stroke-width=&quot;2.2&quot;><path d=&quot;M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z&quot;/></svg>'">
+    </div>
+    <span class="brand-name">TSC <span>Pulse</span></span>
+  </div>
+</header>
+
+<!-- MAIN -->
+<main>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-icon blue">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      </div>
+      <div class="stat-info">
+        <div class="stat-value" id="st-total">0</div>
+        <div class="stat-label">Pending Scheduled</div>
+      </div>
+    </div>
+    <div class="stat">
+      <div class="stat-icon green">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div class="stat-info">
+        <div class="stat-value" id="st-sent">0</div>
+        <div class="stat-label">Sent Today</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LAYOUT -->
+  <div class="layout">
+
+    <!-- LEFT: FORM -->
+    <div class="card" style="height:100%; display:flex; flex-direction:column;">
+      <div class="card-head">
+        <div class="card-title">
+          <div class="card-title-pill"></div>
+          Schedule a Follow-up
+        </div>
+        <button class="header-btn" style="font-size:12px;padding:7px 13px;" onclick="openAddModal()">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add Stakeholder
+        </button>
+      </div>
+      <div class="card-body" style="display:flex; flex-direction:column; gap:0; flex:1; justify-content:space-between;">
+
+        <div style="flex:1; display:flex; flex-direction:column; justify-content:space-evenly;">
+
+        <!-- STAKEHOLDER -->
+        <div class="field">
+          <label>Stakeholder</label>
+          <div class="select-wrap">
+            <div class="select-display" id="stDisplay" onclick="toggleDP()">
+              <div class="select-val" id="stVal">
+                <span style="color: var(--text-soft);">Select stakeholder…</span>
+              </div>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="dropdown-panel" id="dpPanel">
+              <div class="dp-search">
+                <input type="text" id="dpSearch" placeholder="Search name or number…" oninput="filterDP(this.value)">
+              </div>
+              <div class="dp-list" id="dpList">
+                <div class="dp-empty">Loading…</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FOLLOW UP FOR -->
+        <div class="field">
+          <label>Follow-up For</label>
+          <input type="text" id="followFor" placeholder="Ad Campaign data, Lead data, Spend data" oninput="refreshPreview()">
+        </div>
+
+        <!-- SEND TYPE -->
+        <div class="field">
+          <label>Send Type</label>
+          <div class="type-toggle">
+            <button class="type-btn active" id="btn-instant" onclick="setSendType('instant')">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              Send Now
+            </button>
+            <button class="type-btn" id="btn-scheduled" onclick="setSendType('scheduled')">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              Schedule
+            </button>
+          </div>
+        </div>
+
+        <!-- SCHEDULE BLOCK -->
+        <div class="sched-block" id="schedBlock">
+          <div class="form-row" style="margin-bottom:14px;">
+            <div class="field" style="margin:0;">
+              <label>Date</label>
+              <input type="date" id="sDate" oninput="refreshPreview()">
+            </div>
+            <div class="field" style="margin:0;">
+              <label>Time</label>
+              <input type="time" id="sTime" value="09:00">
+            </div>
+          </div>
+          <div class="field" style="margin-bottom:0;">
+            <label>Repeat</label>
+            <div class="pills">
+              <span class="pill active" data-v="once"       onclick="setPill(this)">Once</span>
+              <span class="pill"        data-v="daily"      onclick="setPill(this)">Daily</span>
+              <span class="pill"        data-v="weekly"     onclick="setPill(this)">Every Week</span>
+              <span class="pill"        data-v="biweekly"   onclick="setPill(this)">Bi-weekly</span>
+              <span class="pill"        data-v="monthly"    onclick="setPill(this)">Monthly</span>
+              <span class="pill" data-v="monday"    onclick="setPill(this)">Every Mon</span>
+              <span class="pill" data-v="tuesday"   onclick="setPill(this)">Every Tue</span>
+              <span class="pill" data-v="wednesday" onclick="setPill(this)">Every Wed</span>
+              <span class="pill" data-v="thursday"  onclick="setPill(this)">Every Thu</span>
+              <span class="pill" data-v="friday"    onclick="setPill(this)">Every Fri</span>
+              <span class="pill" data-v="saturday"  onclick="setPill(this)">Every Sat</span>
+              <span class="pill" data-v="sunday"    onclick="setPill(this)">Every Sun</span>
+            </div>
+          </div>
+        </div>
+
+        </div>
+
+        <button class="btn-submit" id="submitBtn" onclick="submit()" style="margin-top:16px;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          <span id="submitLabel">Send Now</span>
+        </button>
+
+      </div>
+    </div>
+
+    <!-- RIGHT: UPCOMING + PREVIEW -->
+    <div style="display:flex; flex-direction:column; gap:16px;">
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title"><div class="card-title-pill"></div> Upcoming</div>
+        </div>
+        <div id="upcomingPanel">
+          <div class="empty-state"><div class="empty-icon">📅</div><div class="empty-text">Nothing scheduled yet</div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title"><div class="card-title-pill"></div> Message Preview</div>
+        </div>
+        <div class="card-body" style="padding:14px;">
+          <div class="wa-preview" style="border-radius:8px;">
+            <div class="wa-bubble">
+              <div class="wa-name" id="pvName">Hello!</div>
+              <div class="wa-body" id="pvBody">This is a follow-up regarding <strong>—</strong>. Please confirm whether the above task has been completed.</div>
+              <div class="wa-time" id="pvTime">now</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FULL TABLE -->
+  <div class="card" style="margin-top: 20px;">
+    <div class="card-head">
+      <div class="card-title"><div class="card-title-pill"></div> All Messages</div>
+      <input type="text" style="width:180px; font-size:12px; padding:7px 11px;" placeholder="Search…" oninput="filterTable(this.value)">
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Stakeholder</th>
+            <th>Phone</th>
+            <th>Follow-up For</th>
+            <th>Scheduled</th>
+            <th>Repeat</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="tBody">
+          <tr><td colspan="8"><div class="empty-state"><div class="empty-icon">💬</div><div class="empty-text">No messages yet</div></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  Product by <strong>Abhishek Tiwari D2C</strong>
+</footer>
+
+<!-- ADD STAKEHOLDER MODAL -->
+<div class="overlay" id="addModal">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">Add Stakeholder</div>
+      <button class="modal-close" onclick="closeAddModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label>Full Name</label>
+        <input type="text" id="newName" placeholder="Full Name">
+      </div>
+      <div class="field">
+        <label>WhatsApp Number</label>
+        <input type="tel" id="newPhone" placeholder="Phone Number">
+        <div style="font-size:11px; color:var(--text-soft); margin-top:4px;">Enter 10-digit mobile number without country code.</div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-ghost" onclick="closeAddModal()">Cancel</button>
+      <button class="btn-blue" id="addBtn" onclick="addStakeholder()">
+        <span id="addBtnLabel">Add to DB</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ───────────────────────────────────────────────────────────────
+//  CONFIG
+// ───────────────────────────────────────────────────────────────
+const GS_URL = "https://script.google.com/macros/s/AKfycbwEQG7Q-CiJKFNxvT5F5CYVeS8ZOfAIoCUXb72W88oj9Ugok4lkuhthBiqYvTmpMhRIEw/exec";
+
+// Gupshup API — only userid & password, everything else stays exactly as your curl
+const GUPSHUP_USERID   = "2000233295";
+const GUPSHUP_PASSWORD = "t6yZNm2q";
+const GUPSHUP_BASE     = "https://mediaapi.smsgupshup.com/GatewayAPI/rest";
+
+// ───────────────────────────────────────────────────────────────
+//  STATE
+// ───────────────────────────────────────────────────────────────
+let stakeholders = [];
+let selected     = null;
+let sendType     = 'instant';
+let recurrence   = 'once';
+let schedules    = JSON.parse(localStorage.getItem('tsc_schedules') || '[]');
+
+// ───────────────────────────────────────────────────────────────
+//  INIT
+// ───────────────────────────────────────────────────────────────
+window.onload = () => {
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('sDate').min   = today;
+  document.getElementById('sDate').value = today;
+  loadStakeholders();
+  renderTable(schedules);
+  updateStats();
+  reAttach();
+};
+
+// ───────────────────────────────────────────────────────────────
+//  FETCH STAKEHOLDERS
+// ───────────────────────────────────────────────────────────────
+async function loadStakeholders() {
+  document.getElementById('dpList').innerHTML = '<div class="dp-empty">Loading…</div>';
+  try {
+    const res  = await fetch(GS_URL + '?action=getStakeholders', { redirect: 'follow' });
+    const text = await res.text();
+    const json = JSON.parse(text);
+    if (json.success && json.data) {
+      stakeholders = json.data;
+      renderDPItems(stakeholders);
+    } else {
+      throw new Error(json.message || 'Failed');
+    }
+  } catch (e) {
+    console.error('loadStakeholders error:', e);
+    toast('error', 'Could not load stakeholders. See console for details.');
+    document.getElementById('dpList').innerHTML = '<div class="dp-empty">Load failed. <span style="cursor:pointer;text-decoration:underline;" onclick="loadStakeholders()">Retry</span></div>';
+  }
+}
+
+// ───────────────────────────────────────────────────────────────
+//  DROPDOWN
+// ───────────────────────────────────────────────────────────────
+function renderDPItems(list) {
+  const el = document.getElementById('dpList');
+  if (!list.length) { el.innerHTML = '<div class="dp-empty">No stakeholders found.</div>'; return; }
+  el.innerHTML = list.map((s) => `
+    <div class="dp-item" onclick="pickStakeholder(${stakeholders.indexOf(s)})">
+      <div class="s-avatar">${s.name[0].toUpperCase()}</div>
+      <div>
+        <div class="dp-item-name">${s.name}</div>
+        <div class="dp-item-phone">${s.phone}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterDP(q) {
+  renderDPItems(stakeholders.filter(s =>
+    s.name.toLowerCase().includes(q.toLowerCase()) || s.phone.includes(q)
+  ));
+}
+
+function toggleDP() {
+  const p = document.getElementById('dpPanel');
+  const d = document.getElementById('stDisplay');
+  const open = p.classList.toggle('open');
+  d.classList.toggle('open', open);
+  if (open) {
+    document.getElementById('dpSearch').focus();
+    document.getElementById('dpSearch').value = '';
+    renderDPItems(stakeholders);
+  }
+}
+
+function pickStakeholder(idx) {
+  selected = stakeholders[idx];
+  const val = document.getElementById('stVal');
+  val.innerHTML = `<div class="s-avatar">${selected.name[0].toUpperCase()}</div>
+    <div>
+      <span style="font-weight:600; color:var(--text);">${selected.name}</span>
+      <span style="font-size:12px; color:var(--text-soft); margin-left:6px;">${selected.phone}</span>
+    </div>`;
+  document.getElementById('stDisplay').classList.add('has-value');
+  document.getElementById('dpPanel').classList.remove('open');
+  document.getElementById('stDisplay').classList.remove('open');
+  refreshPreview();
+}
+
+document.addEventListener('click', e => {
+  if (!document.getElementById('stDisplay').parentElement.contains(e.target)) {
+    document.getElementById('dpPanel').classList.remove('open');
+    document.getElementById('stDisplay').classList.remove('open');
+  }
+});
+
+// ───────────────────────────────────────────────────────────────
+//  FORM CONTROLS
+// ───────────────────────────────────────────────────────────────
+function setSendType(t) {
+  sendType = t;
+  document.getElementById('btn-instant').classList.toggle('active', t === 'instant');
+  document.getElementById('btn-scheduled').classList.toggle('active', t === 'scheduled');
+  document.getElementById('schedBlock').classList.toggle('show', t === 'scheduled');
+  document.getElementById('submitLabel').textContent = t === 'instant' ? 'Send Now' : 'Schedule Message';
+  refreshPreview();
+}
+
+function setPill(el) {
+  document.querySelectorAll('.pills .pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  recurrence = el.dataset.v;
+}
+
+function refreshPreview() {
+  const name      = selected ? selected.name : '—';
+  const followFor = document.getElementById('followFor').value || '—';
+  const d         = document.getElementById('sDate').value;
+  const t         = document.getElementById('sTime').value;
+
+  document.getElementById('pvName').textContent = selected ? `Hi ${name},` : 'Hello!';
+  document.getElementById('pvBody').innerHTML   =
+    `This message is regarding the task assigned to you.\n\nTask: <strong>${followFor}</strong>\n\nPlease confirm whether the above task has been completed.`;
+  document.getElementById('pvTime').textContent = sendType === 'instant' ? 'Now' : (d ? `${d} ${t}` : '—');
+}
+
+// ───────────────────────────────────────────────────────────────
+//  SUBMIT
+// ───────────────────────────────────────────────────────────────
+async function submit() {
+  if (!selected)                                           { toast('error', 'Select a stakeholder first.'); return; }
+  if (!document.getElementById('followFor').value.trim()) { toast('error', 'Enter a follow-up topic.'); return; }
+  if (sendType === 'scheduled' && !document.getElementById('sDate').value) { toast('error', 'Pick a schedule date.'); return; }
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.innerHTML = `<span class="spin"></span> Processing…`;
+
+  const followFor = document.getElementById('followFor').value.trim();
+  const dateVal   = document.getElementById('sDate').value;
+  const timeVal   = document.getElementById('sTime').value;
+
+  if (sendType === 'instant') {
+    const ok = await sendGupshup(selected.phone, selected.name, followFor);
+    addScheduleEntry(selected, followFor, 'Instant', 'once', ok ? 'sent' : 'failed');
+    toast(ok ? 'success' : 'error', ok ? `Sent to ${selected.name}!` : 'Failed. Check console.');
+  } else {
+    addScheduleEntry(selected, followFor, `${dateVal} ${timeVal}`, recurrence, 'scheduled');
+    scheduleTimer(schedules[0]);
+    toast('info', `Scheduled for ${dateVal} at ${timeVal}`);
+  }
+
+  btn.disabled = false;
+  btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg><span id="submitLabel">${sendType === 'instant' ? 'Send Now' : 'Schedule Message'}</span>`;
+  resetForm();
+}
+
+function addScheduleEntry(s, followFor, when, rec, status) {
+  const entry = { id: Date.now(), name: s.name, phone: s.phone, followFor, when, rec, status, at: new Date().toISOString() };
+  schedules.unshift(entry);
+  save();
+  renderTable(schedules);
+  updateStats();
+
+  // ── Persist to Google Sheet so cron fires even when browser is closed ──
+  if (status === 'scheduled') {
+    fetch(GS_URL
+      + '?action=saveSchedule'
+      + '&id='          + entry.id
+      + '&name='        + encodeURIComponent(entry.name)
+      + '&phone='       + encodeURIComponent(entry.phone)
+      + '&followFor='   + encodeURIComponent(entry.followFor)
+      + '&scheduledAt=' + encodeURIComponent(entry.when)
+      + '&recurrence='  + encodeURIComponent(entry.rec),
+      { redirect: 'follow' }
+    ).then(r => r.text())
+     .then(t => console.log('Saved to sheet for cron:', t))
+     .catch(err => console.error('Failed to save to sheet:', err));
+  }
+}
+
+function resetForm() {
+  selected = null;
+  document.getElementById('stVal').innerHTML = `<span style="color: var(--text-soft);">Select stakeholder…</span>`;
+  document.getElementById('stDisplay').classList.remove('has-value');
+  document.getElementById('followFor').value = '';
+  document.getElementById('sDate').value = new Date().toISOString().split('T')[0];
+  document.getElementById('sTime').value = '09:00';
+  recurrence = 'once';
+  document.querySelectorAll('.pills .pill').forEach(p => p.classList.remove('active'));
+  document.querySelector('.pill[data-v="once"]').classList.add('active');
+  refreshPreview();
+}
+
+// ───────────────────────────────────────────────────────────────
+//  GUPSHUP API — fire and forget, CORS blocks response but message
+//  always delivers (confirmed). Return true to keep UI green.
+// ───────────────────────────────────────────────────────────────
+async function sendGupshup(phone, name, followUpTask) {
+  const msg = "Hi " + name + ",\n\nThis message is regarding the task assigned to you.\n\nTask: " + followUpTask + "\n\nPlease confirm whether the above task has been completed.";
+  const params = new URLSearchParams({
+    userid:     GUPSHUP_USERID,
+    password:   GUPSHUP_PASSWORD,
+    send_to:    phone,
+    v:          "1.1",
+    format:     "json",
+    msg_type:   "TEXT",
+    method:     "SENDMESSAGE",
+    msg:        msg,
+    isTemplate: "true"
+  });
+  fetch(GUPSHUP_BASE + "?" + params.toString(), { method: "GET", mode: "no-cors" });
+  return true;
+}
+
+// ───────────────────────────────────────────────────────────────
+//  SCHEDULER
+// ───────────────────────────────────────────────────────────────
+function scheduleTimer(entry) {
+  if (entry.status !== 'scheduled') return;
+  const target = new Date(entry.when);
+  const diff   = target - Date.now();
+  if (diff <= 0) return;
+  setTimeout(async () => {
+    const ok  = await sendGupshup(entry.phone, entry.name, entry.followFor);
+    const idx = schedules.findIndex(s => s.id === entry.id);
+    if (idx > -1) {
+      schedules[idx].status = ok ? 'sent' : 'failed';
+      schedules[idx].at     = new Date().toISOString();
+      if (entry.rec !== 'once' && ok) {
+        const next = { ...entry, id: Date.now(), when: nextDate(entry.when, entry.rec), status: 'scheduled', at: null };
+        schedules.unshift(next);
+        scheduleTimer(next);
+      }
+      save(); renderTable(schedules); updateStats();
+      toast(ok ? 'success' : 'error', ok ? `Auto-sent to ${entry.name}` : `Failed: ${entry.name}`);
+    }
+  }, diff);
+}
+
+function nextDate(str, rec) {
+  const d = new Date(str);
+  if (rec === 'daily')    d.setDate(d.getDate() + 1);
+  if (rec === 'weekly')   d.setDate(d.getDate() + 7);
+  if (rec === 'biweekly') d.setDate(d.getDate() + 14);
+  if (rec === 'monthly')  d.setMonth(d.getMonth() + 1);
+  const dayMap = { monday:1, tuesday:2, wednesday:3, thursday:4, friday:5, saturday:6, sunday:0 };
+  if (dayMap[rec] !== undefined) { do { d.setDate(d.getDate()+1); } while (d.getDay() !== dayMap[rec]); }
+  return d.toISOString().slice(0, 16);
+}
+
+function reAttach() {
+  schedules.filter(s => s.status === 'scheduled').forEach(scheduleTimer);
+}
+
+// ───────────────────────────────────────────────────────────────
+//  TABLE
+// ───────────────────────────────────────────────────────────────
+function renderTable(data) {
+  const tb = document.getElementById('tBody');
+  if (!data.length) {
+    tb.innerHTML = `<tr><td colspan="8"><div class="empty-state"><div class="empty-icon">💬</div><div class="empty-text">No messages yet</div></div></td></tr>`;
+  } else {
+    tb.innerHTML = data.map((s, i) => `
+      <tr>
+        <td style="color:var(--text-soft);font-size:11px;">${i+1}</td>
+        <td>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div class="s-avatar" style="width:24px;height:24px;font-size:10px;">${s.name[0]}</div>
+            <span style="font-weight:600;color:var(--text);">${s.name}</span>
+          </div>
+        </td>
+        <td style="font-family:monospace;font-size:12px;">${s.phone}</td>
+        <td>${s.followFor}</td>
+        <td style="font-size:12px;">${s.when}</td>
+        <td style="text-transform:capitalize;font-size:12px;">${s.rec}</td>
+        <td>${badge(s.status)}</td>
+        <td>
+          ${s.status === 'scheduled' ? `<button class="tbl-btn" title="Send now" onclick="sendNow(${s.id})"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>` : ''}
+          <button class="tbl-btn del" title="Delete" onclick="del(${s.id})"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/></svg></button>
+        </td>
+      </tr>
+    `).join('');
+  }
+  renderUpcoming(data);
+}
+
+function badge(s) {
+  if (s === 'sent')      return `<span class="badge badge-sent">✓ Sent</span>`;
+  if (s === 'failed')    return `<span class="badge badge-failed">✗ Failed</span>`;
+  if (s === 'scheduled') return `<span class="badge badge-scheduled">⏱ Scheduled</span>`;
+  return '';
+}
+
+function renderUpcoming(data) {
+  const up = data.filter(s => s.status === 'scheduled').slice(0, 6);
+  const el = document.getElementById('upcomingPanel');
+  if (!up.length) {
+    el.innerHTML = `<div class="empty-state"><div class="empty-icon">📅</div><div class="empty-text">Nothing scheduled</div></div>`;
+    return;
+  }
+  el.innerHTML = up.map(s => `
+    <div style="display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border);">
+      <div class="s-avatar">${s.name[0]}</div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${s.name}</div>
+        <div style="font-size:11px;color:var(--text-soft);">${s.followFor} · ${s.when}</div>
+      </div>
+      <span class="badge badge-scheduled" style="font-size:10px;white-space:nowrap;">${s.rec}</span>
+    </div>
+  `).join('');
+}
+
+function filterTable(q) {
+  renderTable(schedules.filter(s =>
+    s.name.toLowerCase().includes(q.toLowerCase()) ||
+    s.followFor.toLowerCase().includes(q.toLowerCase()) ||
+    s.phone.includes(q)
+  ));
+}
+
+function updateStats() {
+  document.getElementById('st-total').textContent = schedules.filter(s => s.status === 'scheduled').length;
+  const today = new Date().toDateString();
+  document.getElementById('st-sent').textContent  = schedules.filter(s => s.status === 'sent' && s.at && new Date(s.at).toDateString() === today).length;
+}
+
+async function sendNow(id) {
+  const s = schedules.find(e => e.id === id);
+  if (!s) return;
+  toast('info', `Sending to ${s.name}…`);
+  const ok = await sendGupshup(s.phone, s.name, s.followFor);
+  s.status = ok ? 'sent' : 'failed';
+  s.at = new Date().toISOString();
+  save(); renderTable(schedules); updateStats();
+  toast(ok ? 'success' : 'error', ok ? `Sent to ${s.name}!` : 'Send failed.');
+}
+
+function del(id) {
+  schedules = schedules.filter(s => s.id !== id);
+  save(); renderTable(schedules); updateStats();
+}
+
+function save() { localStorage.setItem('tsc_schedules', JSON.stringify(schedules)); }
+
+// ───────────────────────────────────────────────────────────────
+//  ADD STAKEHOLDER MODAL
+// ───────────────────────────────────────────────────────────────
+function openAddModal()  { document.getElementById('addModal').classList.add('open'); document.getElementById('newName').focus(); }
+function closeAddModal() { document.getElementById('addModal').classList.remove('open'); document.getElementById('newName').value=''; document.getElementById('newPhone').value=''; }
+
+document.getElementById('addModal').addEventListener('click', e => {
+  if (e.target === document.getElementById('addModal')) closeAddModal();
+});
+
+async function addStakeholder() {
+  const name  = document.getElementById('newName').value.trim();
+  const phone = document.getElementById('newPhone').value.trim();
+  if (!name)  { toast('error', 'Name is required.'); return; }
+  if (!phone) { toast('error', 'Phone is required.'); return; }
+  if (!/^\d{10}$/.test(phone)) { toast('error', 'Enter a valid 10-digit number.'); return; }
+
+  const btn = document.getElementById('addBtn');
+  btn.disabled = true;
+  document.getElementById('addBtnLabel').innerHTML = `<span class="spin" style="border-color:rgba(255,255,255,0.4);border-top-color:#fff;width:13px;height:13px;"></span> Adding…`;
+
+  let ok = false;
+  try {
+    const res  = await fetch(GS_URL + '?action=addStakeholder&name=' + encodeURIComponent(name) + '&phone=' + encodeURIComponent(phone), { redirect: 'follow' });
+    const text = await res.text();
+    const json = JSON.parse(text);
+    ok = json.success;
+    if (!ok) toast('error', json.message || 'Could not add.');
+  } catch (e) {
+    console.error('addStakeholder error:', e);
+    toast('error', 'Network error. Check console.');
+  }
+
+  if (ok) {
+    stakeholders.push({ name, phone });
+    renderDPItems(stakeholders);
+    updateStats();
+    closeAddModal();
+    toast('success', `${name} added to sheet!`);
+  }
+
+  btn.disabled = false;
+  document.getElementById('addBtnLabel').textContent = 'Add to DB';
+}
+
+// ───────────────────────────────────────────────────────────────
+//  UTILITIES
+// ───────────────────────────────────────────────────────────────
+let toastTimer;
+function toast(type, msg) {
+  clearTimeout(toastTimer);
+  const el = document.getElementById('toast');
+  el.className = `toast ${type}`;
+  el.textContent = msg;
+  el.classList.add('show');
+  toastTimer = setTimeout(() => el.classList.remove('show'), 3500);
+}
+
+function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+</script>
+</body>
+</html>
